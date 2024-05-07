@@ -11,7 +11,9 @@ import { signIn } from "next-auth/react";
 
 export const SignInModal = () => {
   const signInModal = useSigninModal();
-  const [signInClicked, setSignInClicked] = useState(false);
+  const [googleSignInClicked, setGoogleSignInClicked] = useState(false);
+  const [githubSignInClicked, setGithubSignInClicked] = useState(false);
+
 
   return (
     <Modal showModal={signInModal.isOpen} setShowModal={signInModal.onClose}>
@@ -30,9 +32,9 @@ export const SignInModal = () => {
         <div className="flex flex-col space-y-4 bg-secondary/50 px-4 py-8 md:px-16">
           <Button
             variant="default"
-            disabled={signInClicked}
+            disabled={googleSignInClicked}
             onClick={() => {
-              setSignInClicked(true);
+              setGoogleSignInClicked(true);
               signIn("google", { redirect: false }).then(() =>
                 // TODO: fix this without setTimeOut(), modal closes too quickly. Idea: update value before redirect
                 setTimeout(() => {
@@ -41,12 +43,32 @@ export const SignInModal = () => {
               );
             }}
           >
-            {signInClicked ? (
+            {googleSignInClicked ? (
               <Icons.spinner className="mr-2 size-4 animate-spin" />
             ) : (
               <Icons.google className="mr-2 size-4" />
             )}{" "}
             Sign In with Google
+          </Button>
+          <Button
+            variant="default"
+            disabled={githubSignInClicked}
+            onClick={() => {
+              setGithubSignInClicked(true);
+              signIn("github", { redirect: false }).then(() =>
+                // TODO: fix this without setTimeOut(), modal closes too quickly. Idea: update value before redirect
+                setTimeout(() => {
+                  signInModal.onClose();
+                }, 1000)
+              );
+            }}
+          >
+            {githubSignInClicked ? (
+              <Icons.spinner className="mr-2 size-4 animate-spin" />
+            ) : (
+              <Icons.gitHub className="mr-2 size-4" />
+            )}{" "}
+            Sign In with Github
           </Button>
         </div>
       </div>
